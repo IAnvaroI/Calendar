@@ -25,7 +25,13 @@ export default {
 
         const handleSubmitLogout = async () => {
             try {
-                const result = await axios.post('/api/auth/logout');
+                let token = localStorage.getItem('JWT_TOKEN');
+
+                const result = await axios.post('/api/auth/logout', {},{
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
 
                 if (result.status === 200) {
                     localStorage.removeItem('JWT_TOKEN');
