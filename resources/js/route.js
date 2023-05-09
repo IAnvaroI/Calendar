@@ -2,6 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router';
 import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import Home from "./pages/Home.vue";
+import UsersEdit from "./components/UsersEdit.vue";
+import UsersPasswordChange from "./components/UsersPasswordChange.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -15,11 +17,20 @@ const router = createRouter({
             component: Register,
         },
         {
-            path: '/home/:id',
-            name: 'home',
+            path: '/home',
             component: Home,
             props: true
-        }
+        },
+        {
+            path: '/users/edit',
+            component: UsersEdit,
+            props: true
+        },
+        {
+            path: '/users/password-change',
+            component: UsersPasswordChange,
+            props: true
+        },
     ],
 });
 
@@ -28,11 +39,11 @@ router.beforeEach((to, from, next) => {
         return next({path: '/'})
     }
 
-    return next()
+    return next();
 });
 
 function isAuthenticated() {
-    return Boolean(localStorage.getItem('JWT_TOKEN'))
+    return Boolean(localStorage.getItem('JWT_TOKEN'));
 }
 
 export default router;

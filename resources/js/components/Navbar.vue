@@ -1,10 +1,21 @@
 <template>
         <div class="d-flex flex-column justify-content-center w-full bg-white">
-            <ul class="list-disc text-danger" v-for="(value) in errors">
-                <li>{{ value[0] }}</li>
-            </ul>
-            <div class="d-flex flex-row align-items-center justify-content-between py-2 mb-1">
-                <form method="POST" @submit.prevent="handleSubmitLogout">
+            <Errors :errors="errors"/>
+            <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1">
+                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/users/edit">
+                    <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+                        Оновити профіль
+                    </button>
+                </router-link>
+                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/users/password-change">
+                    <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+                        Змінити пароль
+                    </button>
+                </router-link>
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border mx-2" @click="handleUserDelete">
+                    Видалити профіль
+                </button>
+                <form method="POST" @submit.prevent="handleSubmitLogout" class="mx-2">
                     <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
                         Вийти
                     </button>
@@ -17,8 +28,12 @@
 import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from "vue-router";
+import Errors from "./Errors.vue";
 
 export default {
+    components: {
+        Errors
+    },
     setup() {
         const errors = ref();
         const router = useRouter();
@@ -45,9 +60,32 @@ export default {
             }
         }
 
+        const handleUserDelete = async () => {
+            try {
+                let token = localStorage.getItem('JWT_TOKEN');
+
+                const result = await axios.delete('/api/users',{
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                if (result.status === 200) {
+                    localStorage.removeItem('JWT_TOKEN');
+
+                    await router.push('/');
+                }
+            } catch (exception) {
+                if (exception && exception.response.data && exception.response.data.errors) {
+                    errors.value = Object.values(exception.response.data.errors);
+                }
+            }
+        }
+
         return {
             errors,
             handleSubmitLogout,
+            handleUserDelete,
         }
     }
 }

@@ -35,7 +35,6 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'userId' => auth()->user()->id,
             'token' => $token,
         ]);
 
@@ -50,7 +49,9 @@ class AuthController extends Controller
         $validatedRequest = $request->safe();
 
         $user = User::create([
-            'name' => $validatedRequest['name'],
+            'firstname' => $validatedRequest['firstname'],
+            'lastname' => $validatedRequest['lastname'],
+            'birth_date' => $validatedRequest['birthDate'],
             'email' => $validatedRequest['email'],
             'password' => Hash::make($validatedRequest['password']),
         ]);
@@ -58,7 +59,6 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'userId' => $user->id,
             'token' => $token,
         ]);
     }

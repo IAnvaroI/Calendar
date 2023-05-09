@@ -21,3 +21,7 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('logout', 'logout')->middleware('auth.jwt');
 });
+
+Route::controller(UserController::class)->prefix('users')->middleware('auth.jwt')->group(function () {
+    Route::get('edit', 'edit');
+});
