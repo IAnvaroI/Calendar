@@ -64,7 +64,7 @@ export default {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
 
-                const result = await axios.get('/api/users/edit', {
+                const result = await axios.get('/api/user/edit', {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
@@ -88,14 +88,14 @@ export default {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
 
-                const result = await axios.put('/api/users', form, {
+                const result = await axios.patch('/api/user/update', form, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 });
 
                 if (result.status === 200) {
-                    await router.push('home');
+                    await router.push({ name: 'home'});
                 }
             } catch (exception) {
                 if (exception && exception.response.data && exception.response.data.errors) {

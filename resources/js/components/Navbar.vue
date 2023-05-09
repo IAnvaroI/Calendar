@@ -2,12 +2,12 @@
         <div class="d-flex flex-column justify-content-center w-full bg-white">
             <Errors :errors="errors"/>
             <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1">
-                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/users/edit">
+                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/edit">
                     <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
                         Оновити профіль
                     </button>
                 </router-link>
-                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/users/password-change">
+                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/password-change">
                     <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
                         Змінити пароль
                     </button>
@@ -64,16 +64,18 @@ export default {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
 
-                const result = await axios.delete('/api/users',{
-                    headers: {
-                        'Authorization': 'Bearer ' + token
+                if (confirm('Ви впевнені, що хочете видалити профіль?')) {
+                    const result = await axios.delete('/api/user/delete',{
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    if (result.status === 200) {
+                        localStorage.removeItem('JWT_TOKEN');
+
+                        await router.push('/');
                     }
-                });
-
-                if (result.status === 200) {
-                    localStorage.removeItem('JWT_TOKEN');
-
-                    await router.push('/');
                 }
             } catch (exception) {
                 if (exception && exception.response.data && exception.response.data.errors) {

@@ -47,14 +47,14 @@ export default {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
 
-                const result = await axios.patch('/api/users/password', form, {
+                const result = await axios.patch('/api/user/update/password', form, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 });
 
                 if (result.status === 200) {
-                    await router.push('home');
+                    await router.push({ name: 'home'});
                 }
             } catch (exception) {
                 if (exception && exception.response.data && exception.response.data.errors) {

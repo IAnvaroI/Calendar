@@ -17,11 +17,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::post('logout', 'logout')->middleware('auth.jwt');
+    Route::post('/login', 'login');
+    Route::post('/register', 'register');
+    Route::post('/logout', 'logout')->middleware('auth.jwt');
 });
 
-Route::controller(UserController::class)->prefix('users')->middleware('auth.jwt')->group(function () {
-    Route::get('edit', 'edit');
+Route::controller(UserController::class)->prefix('user')->middleware('auth.jwt')->group(function () {
+    Route::get('/edit', 'edit');
+    Route::patch('/update', 'update');
+    Route::patch('/update/password', 'updatePassword');
+    Route::delete('/delete', 'destroy');
 });

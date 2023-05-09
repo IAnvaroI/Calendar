@@ -2,8 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router';
 import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import Home from "./pages/Home.vue";
-import UsersEdit from "./components/UsersEdit.vue";
-import UsersPasswordChange from "./components/UsersPasswordChange.vue";
+import UserEdit from "./components/UserEdit.vue";
+import UserPasswordChange from "./components/UserPasswordChange.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -18,17 +18,18 @@ const router = createRouter({
         },
         {
             path: '/home',
+            name: 'home',
             component: Home,
             props: true
         },
         {
-            path: '/users/edit',
-            component: UsersEdit,
+            path: '/user/edit',
+            component: UserEdit,
             props: true
         },
         {
-            path: '/users/password-change',
-            component: UsersPasswordChange,
+            path: '/user/password-change',
+            component: UserPasswordChange,
             props: true
         },
     ],
