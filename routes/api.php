@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,9 +23,21 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/logout', 'logout')->middleware('auth.jwt');
 });
 
-Route::controller(UserController::class)->prefix('user')->middleware('auth.jwt')->group(function () {
-    Route::get('/edit', 'edit');
-    Route::patch('/update', 'update');
-    Route::patch('/update/password', 'updatePassword');
-    Route::delete('/delete', 'destroy');
+Route::middleware('auth.jwt')->group(function () {
+    Route::controller(UserController::class)->prefix('user')->group(function () {
+        Route::get('/edit', 'edit');
+        Route::patch('/update', 'update');
+        Route::patch('/update/password', 'updatePassword');
+        Route::delete('/delete', 'destroy');
+    });
+
+    Route::controller(EventController::class)->prefix('events')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{event}/edit', 'edit');
+        Route::patch('/{event}', 'update');
+        Route::delete('/{event}', 'destroy');
+    });
 });
+
+Route::get('/tags', [TagController::class, 'index']);
