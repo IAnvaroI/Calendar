@@ -2,10 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Collection;
+use App\Queries\EventQueryBuilder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Query\Builder as DatabaseBuilder;
 
+/**
+ * Class Event.
+ *
+ * @property string $title
+ * @property Carbon $start
+ * @property Carbon $end
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class Event extends Model
 {
     /**
@@ -15,8 +27,9 @@ class Event extends Model
      */
     protected $fillable = [
         'title',
-        'start_datetime',
-        'end_datetime',
+        'start',
+        'end',
+        'user_id',
     ];
 
     /**
@@ -25,9 +38,29 @@ class Event extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'start_datetime' => 'datetime',
-        'end_datetime' => 'datetime',
+        'start' => 'datetime',
+        'end' => 'datetime',
     ];
+
+    /**
+     * @param DatabaseBuilder $query
+     *
+     * @return EventQueryBuilder
+     */
+    public function newEloquentBuilder($query): EventQueryBuilder
+    {
+        return new EventQueryBuilder($query);
+    }
+
+    /**
+     * Get the author of the event.
+     *
+     * @return BelongsTo
+     */
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the tags which are assigned to this event.
@@ -36,46 +69,6 @@ class Event extends Model
      */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class);
-    }
-
-    /**
-     * @param array $tagsIds
-     * @return Collection
-     */
-    public static function getByTags(array $tagsIds): Collection
-    {
-        return static::whereHas('tags', function ($query) use ($tagsIds) {
-            $query->whereIn('tags.id', $tagsIds);
-        })->get();
-    }
-
-    /**
-     * @param array $dates
-     * @return Collection
-     */
-    public static function getByDates(array $dates): Collection
-    {
-        return static::all()->filter(function (Event $event) use ($dates) {
-            $isPass = false;
-
-            foreach ($dates as $date) {
-                if ($event->start_datetime->format('Y-m-d') == $date) {
-                    $isPass = true;
-                    break;
-                }
-            }
-
-            return $isPass;
-        });
-    }
-
-    /**
-     * @param string $date
-     * @return Collection
-     */
-    public static function getFromDate(string $date): Collection
-    {
-        return static::whereDate('start_datetime', '>=', $date)->get();
+        return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 }

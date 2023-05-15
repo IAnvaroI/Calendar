@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -118,6 +119,10 @@ class UserController extends Controller
         try {
             $user = Auth::getUser();
 
+            $user->events->each(function (Event $event) {
+                $event->tags()->detach();
+            });
+            $user->events()->delete();
             $user->delete();
         } catch (Throwable $e) {
             Log::error($e->getMessage() . "\n" . $e->getTraceAsString());
@@ -125,7 +130,7 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'error',
                 'errors' => [
-                    'userDelete' => [$e->getMessage()],
+                    'userDelete' => ['Database error occurred.'],
                 ],
             ], 500);
         }
