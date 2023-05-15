@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\IndexEventsRequest;
+use App\Http\Resources\EventCollection;
 use App\Http\Resources\EventResource;
+use App\Http\Resources\ResourcePaginator;
 use App\Models\Event;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +30,10 @@ class EventController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'events' => EventResource::collection($query->get()),
+            'events' => new ResourcePaginator(
+                $query->paginate(config('pagination.per_page')),
+                EventCollection::class
+            ),
         ]);
     }
 
