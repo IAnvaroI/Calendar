@@ -1,27 +1,32 @@
 <template>
-        <div class="d-flex flex-column justify-content-center w-full bg-white">
-            <Errors :errors="errors"/>
-            <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1">
-                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/edit">
-                    <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
-                        Оновити профіль
-                    </button>
-                </router-link>
-                <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/password-change">
-                    <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
-                        Змінити пароль
-                    </button>
-                </router-link>
-                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border mx-2" @click="handleUserDelete">
-                    Видалити профіль
+    <div class="d-flex flex-column justify-content-center w-full bg-white">
+        <Errors :errors="errors"/>
+        <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1">
+            <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/events/create">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+                    Створити подію
                 </button>
-                <form method="POST" @submit.prevent="handleSubmitLogout" class="mx-2">
-                    <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
-                        Вийти
-                    </button>
-                </form>
-            </div>
+            </router-link>
+            <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/edit">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+                    Оновити профіль
+                </button>
+            </router-link>
+            <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/password-change">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+                    Змінити пароль
+                </button>
+            </router-link>
+            <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border mx-2" @click="handleUserDelete">
+                Видалити профіль
+            </button>
+            <form method="POST" @submit.prevent="handleSubmitLogout" class="mx-2">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+                    Вийти
+                </button>
+            </form>
         </div>
+    </div>
 </template>
 
 <script>
@@ -38,11 +43,11 @@ export default {
         const errors = ref();
         const router = useRouter();
 
-        const handleSubmitLogout = async () => {
+        const handleSubmitLogout = async function () {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
 
-                const result = await axios.post('/api/auth/logout', {},{
+                const result = await axios.post('/api/auth/logout', {}, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
@@ -60,12 +65,12 @@ export default {
             }
         }
 
-        const handleUserDelete = async () => {
+        const handleUserDelete = async function () {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
 
                 if (confirm('Ви впевнені, що хочете видалити профіль?')) {
-                    const result = await axios.delete('/api/user/delete',{
+                    const result = await axios.delete('/api/user/delete', {
                         headers: {
                             'Authorization': 'Bearer ' + token
                         }
