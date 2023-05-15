@@ -8,6 +8,7 @@ use App\Http\Resources\EventCollection;
 use App\Http\Resources\EventResource;
 use App\Http\Resources\ResourcePaginator;
 use App\Models\Event;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
@@ -17,6 +18,38 @@ use Throwable;
 
 class EventController extends Controller
 {
+    /**
+     * Display a listing of the events.
+     * @throws Exception
+     */
+    public function sharedIndex(IndexEventsRequest $request): JsonResponse
+    {
+        try {
+            $validatedRequest = $request->safe()->toArray();
+            $author = User::findOrFail($request['authorId']);
+            $query = $author->events();
+
+            $this->filterEvents($query, $validatedRequest);
+
+            return response()->json([
+                'status' => 'success',
+                'events' => new ResourcePaginator(
+                    $query->paginate(config('pagination.per_page')),
+                    EventCollection::class
+                ),
+            ]);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage() . "\n" . $e->getTraceAsString());
+
+            return response()->json([
+                'status' => 'error',
+                'errors' => [
+                    'dbError' => ['Database error occurred.'],
+                ],
+            ], 404);
+        }
+    }
+
     /**
      * Display a listing of the events.
      * @throws Exception
