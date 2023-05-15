@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EventRequest;
+use App\Http\Requests\IndexEventsRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -17,11 +19,17 @@ class EventController extends Controller
      * Display a listing of the events.
      * @throws Exception
      */
-    public function index(): JsonResponse
+    public function index(IndexEventsRequest $request): JsonResponse
     {
+        $validatedRequest = $request->safe()->toArray();
+        $query = auth()->user()->events();
+
+        $this->filterEvents($query, $validatedRequest);
+
         return response()->json([
             'status' => 'success',
-            'events' => EventResource::collection(auth()->user()->events),]);
+            'events' => EventResource::collection($query->get()),
+        ]);
     }
 
     /**
@@ -164,5 +172,40 @@ class EventController extends Controller
             'status' => 'success',
             'message' => 'The event deletion completed successfully.',
         ]);
+    }
+
+    /**
+     * Use filtering methods on the query with specified filters
+     *
+     * @param $query
+     * @param array $filters
+     * @return void
+     */
+    private function filterEvents($query, array $filters): void
+    {
+        if (array_key_exists('events', $filters) && $filters['events']) {
+            $query->whereIn('id', $filters['events']);
+        }
+        if (array_key_exists('tags', $filters) && $filters['tags']) {
+            $query->whereTags($filters['tags']);
+        }
+        if (array_key_exists('dates', $filters) && $filters['dates']) {
+            $query->whereDates($filters['dates']);
+        }
+        if (array_key_exists('startFrom', $filters) && $filters['startFrom']) {
+            $start = Carbon::parse($filters['startFrom']);
+        } else {
+            $start = Carbon::now();
+        }
+        if (array_key_exists('period', $filters) && $filters['period']) {
+            $end = match ($filters['period']) {
+                'day' => $start->copy()->addDay(),
+                'week' => $start->copy()->addWeek(),
+                'month' => $start->copy()->addMonth(),
+            };
+            $query->continueBetween($start, $end);
+        } else {
+            $query->startFrom($start);
+        }
     }
 }

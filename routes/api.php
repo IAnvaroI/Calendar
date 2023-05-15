@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventsFiltersController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,9 @@ Route::middleware('auth.jwt')->group(function () {
         Route::patch('/{event}', 'update');
         Route::delete('/{event}', 'destroy');
     });
+
+    Route::get('/filters/auth/events', [EventsFiltersController::class, 'getAuthEvents']);
 });
 
+Route::get('/filters/dates', [EventsFiltersController::class, 'getDates']);
 Route::get('/tags', [TagController::class, 'index']);
