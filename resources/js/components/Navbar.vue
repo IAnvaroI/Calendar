@@ -2,6 +2,10 @@
     <div class="d-flex flex-column justify-content-center w-full bg-white">
         <Errors :errors="errors"/>
         <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1">
+            <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border mx-2"
+                    @click="handleSharingLinkGenerate">
+                Згенерувати посилання для перегляду календаря
+            </button>
             <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/events/create">
                 <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
                     Створити подію
@@ -89,10 +93,40 @@ export default {
             }
         }
 
+        const handleSharingLinkGenerate = async function (event) {
+            try {
+                let token = localStorage.getItem('JWT_TOKEN');
+
+                const result = await axios.get('/api/sharing-token', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                if (result.status === 200 && result.data.token) {
+                    navigator.clipboard.writeText(window.location.origin + '/shared-events/' + result.data.token)
+                        .then(() => {
+                            event.target.innerText = 'Посилання скопійовано в буфер обміну';
+                        }, () => {
+                            event.target.innerText = 'Посилання не скопіювалося в буфер обміну';
+                        });
+
+                    setTimeout(() => {
+                        event.target.innerText = 'Згенерувати посилання для перегляду календаря';
+                    }, 5000);
+                }
+            } catch (exception) {
+                if (exception && exception.response.data && exception.response.data.errors) {
+                    errors.value = Object.values(exception.response.data.errors);
+                }
+            }
+        }
+
         return {
             errors,
             handleSubmitLogout,
             handleUserDelete,
+            handleSharingLinkGenerate,
         }
     }
 }

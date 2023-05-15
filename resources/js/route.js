@@ -41,6 +41,11 @@ const router = createRouter({
             component: UpdateEvent,
             props: true
         },
+        {
+            path: '/shared-events/:sharingToken',
+            component: SharedEventsList,
+            props: true
+        },
     ],
 });
 

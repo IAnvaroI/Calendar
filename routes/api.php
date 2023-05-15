@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventsFiltersController;
+use App\Http\Controllers\JWTController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,12 @@ Route::middleware('auth.jwt')->group(function () {
     });
 
     Route::get('/filters/auth/events', [EventsFiltersController::class, 'getAuthEvents']);
+    Route::get('/sharing-token', [JWTController::class, 'generateToken']);
+});
+
+Route::middleware('shared.jwt')->group(function () {
+    Route::get('/shared/events', [EventController::class, 'sharedIndex']);
+    Route::get('/filters/shared/events', [EventsFiltersController::class, 'getSharedEvents']);
 });
 
 Route::get('/filters/dates', [EventsFiltersController::class, 'getDates']);
