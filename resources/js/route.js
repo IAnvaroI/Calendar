@@ -49,16 +49,4 @@ const router = createRouter({
     ],
 });
 
-router.beforeEach((to, from, next) => {
-    if (to.path !== '/' && to.path !== '/register' && !isAuthenticated()) {
-        return next({path: '/'})
-    }
-
-    return next();
-});
-
-function isAuthenticated() {
-    return Boolean(localStorage.getItem('JWT_TOKEN'));
-}
-
 export default router;

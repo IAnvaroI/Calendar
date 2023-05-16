@@ -32,14 +32,14 @@
             <nav class="d-flex justify-content-center">
                 <ul class="pagination">
                     <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
-                        <a class="page-link" href="#" @click="prevPage">Previous</a>
+                        <a class="page-link" href="#" @click="prevPage">Попередня</a>
                     </li>
                     <li class="page-item" :class="{ 'active': page === currentPage }" v-for="page in lastPage"
                         :key="page">
                         <a class="page-link" href="#" @click="gotoPage(page)">{{ page }}</a>
                     </li>
                     <li class="page-item" :class="{ 'disabled': currentPage === lastPage }">
-                        <a class="page-link" href="#" @click="nextPage">Next</a>
+                        <a class="page-link" href="#" @click="nextPage">Наступна</a>
                     </li>
                 </ul>
             </nav>

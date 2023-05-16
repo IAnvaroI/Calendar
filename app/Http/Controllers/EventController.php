@@ -14,9 +14,42 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use App\Models\User;
 
 class EventController extends Controller
 {
+    /**
+     * Display a listing of the shared events.
+     * @throws Exception
+     */
+    public function sharedIndex(IndexEventsRequest $request): JsonResponse
+    {
+        try {
+            $validatedRequest = $request->safe()->toArray();
+            $author = User::findOrFail($request['authorId']);
+            $query = $author->events();
+
+            $this->filterEvents($query, $validatedRequest);
+
+            return response()->json([
+                'status' => 'success',
+                'events' => new ResourcePaginator(
+                    $query->paginate(config('pagination.per_page')),
+                    EventCollection::class
+                ),
+            ]);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage() . "\n" . $e->getTraceAsString());
+
+            return response()->json([
+                'status' => 'error',
+                'errors' => [
+                    'dbError' => ['Database error occurred.'],
+                ],
+            ], 404);
+        }
+    }
+
     /**
      * Display a listing of the events.
      * @throws Exception
