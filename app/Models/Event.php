@@ -17,6 +17,7 @@ use Illuminate\Database\Query\Builder as DatabaseBuilder;
  * @property Carbon $end
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @method static EventQueryBuilder query()
  */
 class Event extends Model
 {

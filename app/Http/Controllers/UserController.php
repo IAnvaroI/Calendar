@@ -119,10 +119,6 @@ class UserController extends Controller
         try {
             $user = Auth::getUser();
 
-            $user->events->each(function (Event $event) {
-                $event->tags()->detach();
-            });
-            $user->events()->delete();
             $user->delete();
         } catch (Throwable $e) {
             Log::error($e->getMessage() . "\n" . $e->getTraceAsString());
