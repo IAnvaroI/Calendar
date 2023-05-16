@@ -3,18 +3,18 @@
     <Errors :errors="errors"/>
     <form method="GET" @submit.prevent="handleSubmit">
         <div class="mb-3 d-flex flex-column">
-            <label class="text-grey-darker text-center font-bold mb-2" for="events">Події</label>
-            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                    id="events" size="5" multiple v-model="form.events">
-                <option v-for="event in allEvents" :key="event.id" :value="event.id">{{ event.title }}</option>
-            </select>
+            <p class="text-grey-darker text-center font-bold mb-2">Події</p>
+            <label v-for="event in allEvents" :key="event.id">
+                <input type="checkbox" :value="event.id" v-model="form.events">
+                {{ event.title }}
+            </label>
         </div>
         <div class="mb-3 d-flex flex-column">
-            <label class="text-grey-darker text-center font-bold mb-2">Теги</label>
-            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                    id="tags" size="5" multiple v-model="form.tags">
-                <option v-for="tag in tags" :key="tag.id" :value="tag.id">{{ tag.name }}</option>
-            </select>
+            <p class="text-grey-darker text-center font-bold mb-2">Теги</p>
+            <label v-for="tag in tags" :key="tag.id">
+                <input type="checkbox" :value="tag.id" v-model="form.tags">
+                {{ tag.name }}
+            </label>
         </div>
         <div class="mb-3 d-flex flex-column">
             <label class="text-grey-darker text-center font-bold mb-2" for="dates">Події починаються з дат</label>

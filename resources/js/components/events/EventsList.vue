@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-center bg-white shadow overflow-hidden rounded col-xxl-8 col-xl-10 p-4 mt-4 row">
+    <div class="d-flex justify-content-center bg-white shadow overflow-hidden rounded col-xxl-8 col-xl-10 p-4 my-4 row">
         <div class="d-flex flex-column justify-content-center col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 px-1">
             <EventsFilters @filter-events="handleFiltersChange" :page="currentPage" :is-shared="false"/>
         </div>
@@ -61,7 +61,10 @@ export default {
     setup() {
         const errors = ref();
         const events = ref();
-        const filters = ref();
+        const filters = ref({
+            startFrom: (new Date()).toISOString().slice(0, 10),
+            period: 'month',
+        });
         const currentPage = ref(1);
         const lastPage = ref()
 

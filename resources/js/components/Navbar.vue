@@ -1,34 +1,38 @@
 <template>
     <div class="d-flex flex-column justify-content-center w-full bg-white">
         <Errors :errors="errors"/>
-        <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1">
-            <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border mx-2"
-                    @click="handleSharingLinkGenerate">
-                Згенерувати посилання для перегляду календаря
-            </button>
-            <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/events/create">
-                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+        <div class="d-flex flex-row align-items-center justify-content-center py-2 mb-1 row">
+            <router-link class="col-xxl-2 inline-block text-center hover:text-blue-darker mt-1 p-0 mx-1"
+                         to="/events/create">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border w-100" type="submit">
                     Створити подію
                 </button>
             </router-link>
-            <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/edit">
-                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+            <router-link class="col-xxl-2 inline-block text-center hover:text-blue-darker mt-1 p-0 mx-1"
+                         to="/user/edit">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border w-100" type="submit">
                     Оновити профіль
                 </button>
             </router-link>
-            <router-link class="inline-block text-center hover:text-blue-darker mx-2" to="/user/password-change">
-                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+            <router-link class="col-xxl-2 inline-block text-center hover:text-blue-darker mt-1 p-0 mx-1"
+                         to="/user/password-change">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border w-100" type="submit">
                     Змінити пароль
                 </button>
             </router-link>
-            <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border mx-2" @click="handleUserDelete">
+            <button class="col-xxl-2 bg-color-dark text-white font-bold py-2 px-4 rounded border mt-1 mx-1"
+                    @click="handleUserDelete">
                 Видалити профіль
             </button>
-            <form method="POST" @submit.prevent="handleSubmitLogout" class="mx-2">
-                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border" type="submit">
+            <form method="POST" @submit.prevent="handleSubmitLogout" class="col-xxl-2 mt-1 p-0 mx-1">
+                <button class="bg-color-dark text-white font-bold py-2 px-4 rounded border w-100" type="submit">
                     Вийти
                 </button>
             </form>
+            <button class="col-xxl-4 bg-color-dark text-white font-bold py-2 px-4 rounded border mt-1 mx-1"
+                    @click="handleSharingLinkGenerate">
+                Згенерувати посилання для перегляду календаря
+            </button>
         </div>
     </div>
 </template>
