@@ -36,10 +36,13 @@ import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import {createApp} from 'vue'
+import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './route'
 
-const app = createApp(App)
-app.use(router)
-app.mount("#app")
+const pinia = createPinia();
+const app = createApp(App);
+app.use(router);
+app.use(pinia);
+app.mount("#app");
