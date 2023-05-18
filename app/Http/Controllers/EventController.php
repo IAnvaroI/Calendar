@@ -9,12 +9,14 @@ use App\Http\Resources\EventResource;
 use App\Http\Resources\ResourcePaginator;
 use App\Models\Event;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\Models\User;
+use function PHPUnit\Framework\isEmpty;
 
 class EventController extends Controller
 {
@@ -29,6 +31,12 @@ class EventController extends Controller
             $author = User::findOrFail($request['authorId']);
             $query = $author->events();
 
+            if($request['filters'] && count($request['filters'])){
+                $query->where(function (Builder $query) use ($request) {
+                    $this->filterEvents($query, $request['filters']);
+                });
+            }
+
             $this->filterEvents($query, $validatedRequest);
 
             return response()->json([
@@ -37,6 +45,7 @@ class EventController extends Controller
                     $query->paginate(config('pagination.per_page')),
                     EventCollection::class
                 ),
+                'blockingFilters' => $request['filters'],
             ]);
         } catch (Throwable $e) {
             Log::error($e->getMessage() . "\n" . $e->getTraceAsString());

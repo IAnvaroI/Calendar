@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-center bg-white shadow overflow-hidden
                     rounded col-xxl-8 col-xl-10 p-4 my-4 row">
             <div class="d-flex flex-column justify-content-center col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 px-1">
-                <EventsFilters @filter-events="handleFiltersChange"
+                <EventsFilters @filter-events="handleFiltersChange" :blocking-filters="blockingFilters" :key="blockingFilters"
                                :page="currentPage" :is-shared="true" :sharing-token="$props.sharingToken"/>
             </div>
             <div class="d-flex flex-column col-xxl-9 col-xl-9 col-lg-10 px-1">
@@ -61,9 +61,9 @@ export default {
         });
         const currentPage = ref(1);
         const lastPage = ref();
+        const blockingFilters = ref({});
 
         onMounted(function () {
-            console.log(props.sharingToken)
             getEvents(currentPage.value);
         });
 
@@ -75,6 +75,7 @@ export default {
 
                 if (result.status === 200 && result.data && result.data.events.data && result.data.events.meta) {
                     events.value = result.data.events.data;
+                    blockingFilters.value = result.data.blockingFilters;
                     currentPage.value = result.data.events.meta.current_page
                     lastPage.value = result.data.events.meta.last_page
                 }
@@ -111,6 +112,7 @@ export default {
             lastPage,
             events,
             errors,
+            blockingFilters,
             handleFiltersChange,
             prevPage,
             nextPage,

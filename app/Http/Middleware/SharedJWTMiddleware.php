@@ -43,7 +43,10 @@ class SharedJWTMiddleware
                 throw new Exception('Sharing token is expired.');
             }
 
-            $request->merge(['authorId' => $payload['claims']['sub']]);
+            $request->merge([
+                'authorId' => $payload['claims']['sub'],
+                'filters' => $payload['claims']['addClaims']['filters'],
+            ]);
 
             return $next($request);
         } catch (Throwable $e) {

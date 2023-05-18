@@ -42,6 +42,7 @@ import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from "vue-router";
 import Errors from "./Errors.vue";
+import {useFiltersStore} from "../store/filters";
 
 export default {
     components: {
@@ -100,8 +101,10 @@ export default {
         const handleSharingLinkGenerate = async function (event) {
             try {
                 let token = localStorage.getItem('JWT_TOKEN');
+                let filtersStore = useFiltersStore();
 
                 const result = await axios.get('/api/sharing-token', {
+                    params: filtersStore.filters,
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
